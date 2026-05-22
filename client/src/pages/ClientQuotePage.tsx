@@ -278,27 +278,60 @@ export default function ClientQuotePage() {
 
   return (
     <div className="min-h-screen bg-[#0A0A0A] text-white">
-      {/* Hero video section */}
-      <div className="relative w-full" style={{ height: "min(56vw, 420px)" }}>
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0A0A0A]/30 via-transparent to-[#0A0A0A] z-10" />
-        <iframe
-          className="absolute inset-0 w-full h-full"
-          src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=1&loop=1&playlist=dQw4w9WgXcQ&controls=0&showinfo=0&rel=0&modestbranding=1"
-          allow="autoplay; encrypted-media"
-          allowFullScreen
-          title="Maids in Black — Professional Cleaning"
-          style={{ border: "none" }}
+      {/* Hero video section — Wistia full-bleed cinematic */}
+      <div className="relative w-full overflow-hidden bg-black" style={{ aspectRatio: "16/9", maxHeight: "520px" }}>
+        {/* Wistia scripts */}
+        <script src="https://fast.wistia.com/player.js" async />
+        <script src="https://fast.wistia.com/embed/bzlt49ipk1.js" async type="module" />
+        <style>{`
+          wistia-player[media-id='bzlt49ipk1']:not(:defined) {
+            background: center / contain no-repeat url('https://fast.wistia.com/embed/medias/bzlt49ipk1/swatch');
+            display: block;
+            filter: blur(5px);
+            padding-top: 56.25%;
+          }
+          wistia-player {
+            width: 100% !important;
+            height: 100% !important;
+            position: absolute !important;
+            top: 0 !important;
+            left: 0 !important;
+          }
+        `}</style>
+        {/* @ts-ignore — Wistia custom element */}
+        <wistia-player
+          media-id="bzlt49ipk1"
+          seo="false"
+          aspect="1.7777777777777777"
+          style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%" }}
         />
-        {/* Brand overlay */}
-        <div className="absolute bottom-0 left-0 right-0 z-20 px-6 pb-6 md:px-12">
+        {/* Gradient overlays — top fade + bottom fade to black */}
+        <div
+          className="absolute inset-0 pointer-events-none z-10"
+          style={{
+            background:
+              "linear-gradient(to bottom, rgba(10,10,10,0.45) 0%, transparent 25%, transparent 55%, rgba(10,10,10,0.85) 85%, #0A0A0A 100%)",
+          }}
+        />
+        {/* Brand overlay bottom */}
+        <div className="absolute bottom-0 left-0 right-0 z-20 px-6 pb-7 md:px-12">
           <div className="flex items-end justify-between">
             <div>
-              <p className="font-sans text-xs tracking-[0.3em] uppercase text-[#E8651A] mb-1">Professional Cleaning</p>
-              <h1 className="font-serif text-3xl md:text-4xl font-bold text-white drop-shadow-lg">Maids in Black</h1>
+              <p
+                className="font-sans text-xs tracking-[0.3em] uppercase mb-1.5"
+                style={{ color: "#E8651A" }}
+              >
+                Professional Cleaning
+              </p>
+              <h1 className="font-serif text-3xl md:text-5xl font-bold text-white" style={{ textShadow: "0 2px 24px rgba(0,0,0,0.7)" }}>
+                Maids in Black
+              </h1>
             </div>
             <div className="text-right hidden md:block">
-              <p className="font-sans text-xs text-white/50 mb-0.5">Prepared for</p>
-              <p className="font-serif text-xl text-white">{quote.clientName}</p>
+              <p className="font-sans text-xs text-white/50 mb-0.5 tracking-wider uppercase">Prepared for</p>
+              <p className="font-serif text-2xl text-white" style={{ textShadow: "0 2px 12px rgba(0,0,0,0.6)" }}>
+                {quote.clientName}
+              </p>
             </div>
           </div>
         </div>
