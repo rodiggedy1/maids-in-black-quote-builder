@@ -142,6 +142,37 @@ export const appRouter = router({
         return quote;
       }),
 
+    // Admin: create a quote from already-parsed fields (preserves edits made in UI)
+    createFromParsed: adminProcedure
+      .input(z.object({
+        clientName: z.string().min(1),
+        bedrooms: z.number(),
+        bathrooms: z.number(),
+        serviceType: z.string(),
+        extras: z.array(z.string()),
+        notes: z.string().optional(),
+        estimateMin: z.number().nullable().optional(),
+        estimateMax: z.number().nullable().optional(),
+        ctaLabel: z.enum(["Book This Cleaning", "Confirm My Date & Time"]).optional(),
+      }))
+      .mutation(async ({ input }) => {
+        const slug = nanoid(10);
+        const quote = await createQuote({
+          slug,
+          rawInput: "",
+          clientName: input.clientName,
+          bedrooms: input.bedrooms,
+          bathrooms: input.bathrooms,
+          serviceType: input.serviceType,
+          extras: input.extras,
+          notes: input.notes || null,
+          estimateMin: input.estimateMin != null ? String(input.estimateMin) : null,
+          estimateMax: input.estimateMax != null ? String(input.estimateMax) : null,
+          ctaLabel: input.ctaLabel ?? "Book This Cleaning",
+        });
+        return quote;
+      }),
+
     // Admin: list all quotes
     list: adminProcedure.query(async () => {
       return getAllQuotes();

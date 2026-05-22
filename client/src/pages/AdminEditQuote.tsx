@@ -21,8 +21,8 @@ export default function AdminEditQuote() {
     serviceType: "Standard Cleaning",
     extras: [] as string[],
     notes: "",
-    estimateMin: 0,
-    estimateMax: 0,
+    estimateMin: "",
+    estimateMax: "",
     ctaLabel: "Book This Cleaning" as "Book This Cleaning" | "Confirm My Date & Time",
   });
 
@@ -35,8 +35,8 @@ export default function AdminEditQuote() {
         serviceType: quote.serviceType,
         extras: quote.extras,
         notes: quote.notes || "",
-        estimateMin: quote.estimateMin ? Number(quote.estimateMin) : 0,
-        estimateMax: quote.estimateMax ? Number(quote.estimateMax) : 0,
+        estimateMin: quote.estimateMin ? String(Number(quote.estimateMin)) : "",
+        estimateMax: quote.estimateMax ? String(Number(quote.estimateMax)) : "",
         ctaLabel: quote.ctaLabel,
       });
     }
@@ -55,8 +55,8 @@ export default function AdminEditQuote() {
     updateQuote.mutate({
       slug,
       ...form,
-      estimateMin: form.estimateMin || null,
-      estimateMax: form.estimateMax || null,
+      estimateMin: form.estimateMin !== "" ? Number(form.estimateMin) : null,
+      estimateMax: form.estimateMax !== "" ? Number(form.estimateMax) : null,
     });
   };
 
@@ -151,18 +151,22 @@ export default function AdminEditQuote() {
             <div>
               <label className="block text-xs text-muted-foreground mb-1">Estimate Min ($)</label>
               <input
-                type="number" min={0}
+                type="text"
+                inputMode="numeric"
+                placeholder="e.g. 150"
                 value={form.estimateMin}
-                onChange={e => setForm(f => ({ ...f, estimateMin: Number(e.target.value) }))}
+                onChange={e => setForm(f => ({ ...f, estimateMin: e.target.value.replace(/[^0-9.]/g, "") }))}
                 className="w-full bg-secondary border border-border rounded px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-ember"
               />
             </div>
             <div>
               <label className="block text-xs text-muted-foreground mb-1">Estimate Max ($)</label>
               <input
-                type="number" min={0}
+                type="text"
+                inputMode="numeric"
+                placeholder="e.g. 200"
                 value={form.estimateMax}
-                onChange={e => setForm(f => ({ ...f, estimateMax: Number(e.target.value) }))}
+                onChange={e => setForm(f => ({ ...f, estimateMax: e.target.value.replace(/[^0-9.]/g, "") }))}
                 className="w-full bg-secondary border border-border rounded px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-ember"
               />
             </div>

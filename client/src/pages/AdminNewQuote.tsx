@@ -13,8 +13,8 @@ type ParsedQuote = {
   serviceType: string;
   extras: string[];
   notes: string;
-  estimateMin: number;
-  estimateMax: number;
+  estimateMin: string;
+  estimateMax: string;
 };
 
 export default function AdminNewQuote() {
@@ -25,13 +25,17 @@ export default function AdminNewQuote() {
 
   const parseQuote = trpc.quote.parse.useMutation({
     onSuccess: (data) => {
-      setParsed(data);
+      setParsed({
+        ...data,
+        estimateMin: data.estimateMin > 0 ? String(data.estimateMin) : "",
+        estimateMax: data.estimateMax > 0 ? String(data.estimateMax) : "",
+      });
       toast.success("Quote parsed — review and save below");
     },
     onError: (e) => toast.error(e.message || "Failed to parse quote"),
   });
 
-  const createQuote = trpc.quote.create.useMutation({
+  const createQuote = trpc.quote.createFromParsed.useMutation({
     onSuccess: (quote) => {
       toast.success(`Quote created for ${quote.clientName}`);
       navigate("/admin");
@@ -45,8 +49,18 @@ export default function AdminNewQuote() {
   };
 
   const handleSave = () => {
-    if (!rawInput.trim()) return;
-    createQuote.mutate({ rawInput, ctaLabel });
+    if (!parsed) { toast.error("Please parse the quote first"); return; }
+    createQuote.mutate({
+      clientName: parsed.clientName,
+      bedrooms: parsed.bedrooms,
+      bathrooms: parsed.bathrooms,
+      serviceType: parsed.serviceType,
+      extras: parsed.extras,
+      notes: parsed.notes,
+      estimateMin: parsed.estimateMin !== "" ? Number(parsed.estimateMin) : null,
+      estimateMax: parsed.estimateMax !== "" ? Number(parsed.estimateMax) : null,
+      ctaLabel,
+    });
   };
 
   const updateField = <K extends keyof ParsedQuote>(key: K, value: ParsedQuote[K]) => {
@@ -173,20 +187,22 @@ export default function AdminNewQuote() {
               <div>
                 <label className="block text-xs text-muted-foreground mb-1">Estimate Min ($)</label>
                 <input
-                  type="number"
-                  min={0}
+                  type="text"
+                  inputMode="numeric"
+                  placeholder="e.g. 150"
                   value={parsed.estimateMin}
-                  onChange={e => updateField("estimateMin", Number(e.target.value))}
+                  onChange={e => updateField("estimateMin", e.target.value.replace(/[^0-9.]/g, "") as any)}
                   className="w-full bg-secondary border border-border rounded px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-ember"
                 />
               </div>
               <div>
                 <label className="block text-xs text-muted-foreground mb-1">Estimate Max ($)</label>
                 <input
-                  type="number"
-                  min={0}
+                  type="text"
+                  inputMode="numeric"
+                  placeholder="e.g. 200"
                   value={parsed.estimateMax}
-                  onChange={e => updateField("estimateMax", Number(e.target.value))}
+                  onChange={e => updateField("estimateMax", e.target.value.replace(/[^0-9.]/g, "") as any)}
                   className="w-full bg-secondary border border-border rounded px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-ember"
                 />
               </div>
