@@ -179,6 +179,32 @@ export const appRouter = router({
         await deleteQuote(input.slug);
         return { success: true };
       }),
+
+    // Public: submit booking request from client page
+    submitBooking: publicProcedure
+      .input(z.object({
+        slug: z.string(),
+        email: z.string().email(),
+        address: z.string().min(5),
+        timePreference: z.enum(["morning", "midday", "evening", "flexible"]),
+      }))
+      .mutation(async ({ input }) => {
+        const quote = await getQuoteBySlug(input.slug);
+        if (!quote) throw new TRPCError({ code: "NOT_FOUND", message: "Quote not found" });
+        // Notify owner of new booking request
+        const { notifyOwner } = await import("./_core/notification");
+        const timeLabels: Record<string, string> = {
+          morning: "8:30 AM",
+          midday: "12:30 PM",
+          evening: "4:30 PM",
+          flexible: "Completely flexible",
+        };
+        await notifyOwner({
+          title: `New Booking Request — ${quote.clientName}`,
+          content: `Client: ${quote.clientName}\nEmail: ${input.email}\nAddress: ${input.address}\nTime Preference: ${timeLabels[input.timePreference]}\nEstimate: $${quote.estimateMin}–$${quote.estimateMax}`,
+        });
+        return { success: true };
+      }),
   }),
 });
 

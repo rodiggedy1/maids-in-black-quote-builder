@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useParams } from "wouter";
 import { trpc } from "@/lib/trpc";
 import { ChevronLeft, ChevronRight, CheckCircle2, Calendar, MapPin, Sparkles, Star } from "lucide-react";
+import { useLocation } from "wouter";
 
 // ─── Slide types ─────────────────────────────────────────────────────────────
 type SlideId = "intro" | "why-choose-us" | "official-quote" | "what-happens-next";
@@ -38,7 +39,7 @@ function SlideIntro({ clientName }: { clientName: string }) {
       </h1>
       <div className="w-16 h-0.5 bg-ember mx-auto my-6" />
       <p className="font-serif text-2xl text-white/90 italic mb-3">
-        Hello, {clientName}
+        Hello, {clientName} 👋
       </p>
       <p className="font-sans text-white/60 text-base max-w-md leading-relaxed">
         We've prepared a personalized cleaning quote just for you. Swipe through to see exactly what's included and what to expect.
@@ -51,7 +52,7 @@ function SlideIntro({ clientName }: { clientName: string }) {
   );
 }
 
-function SlideWhyChooseUs() {
+function SlideWhyChooseUs({ clientName }: { clientName: string }) {
   const reasons = [
     { icon: Star, title: "Top-Rated Service", desc: "Consistently 5-star reviews from clients across the area." },
     { icon: CheckCircle2, title: "Vetted & Insured", desc: "Every cleaner is background-checked and fully insured." },
@@ -62,9 +63,10 @@ function SlideWhyChooseUs() {
   return (
     <div className="flex flex-col justify-center min-h-[520px] px-8 py-12">
       <span className="text-xs tracking-[0.3em] uppercase text-ember font-sans font-medium mb-4">Why Choose Us</span>
-      <h2 className="font-serif text-4xl font-bold text-white mb-10 leading-tight">
-        The Maids in Black<br />Difference
+      <h2 className="font-serif text-4xl font-bold text-white mb-3 leading-tight">
+        Why folks love us, {clientName}
       </h2>
+      <p className="font-sans text-white/45 text-sm mb-8 leading-relaxed">Here's what our clients say keeps them coming back.</p>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         {reasons.map(({ icon: Icon, title, desc }) => (
           <div key={title} className="flex gap-4 p-4 rounded-lg bg-white/5 border border-white/10">
@@ -108,12 +110,13 @@ function SlideOfficialQuote({
   const estimate = formatEstimate(estimateMin, estimateMax);
   return (
     <div className="flex flex-col justify-center min-h-[520px] px-8 py-10">
-      <span className="text-xs tracking-[0.3em] uppercase text-ember font-sans font-medium mb-4">Official Quote</span>
-      {/* Price — shown prominently at the top */}
-      <div className="flex items-baseline gap-3 mb-1">
+      <span className="text-xs tracking-[0.3em] uppercase text-ember font-sans font-medium mb-3">Official Quote</span>
+      <h2 className="font-serif text-3xl font-bold text-white mb-1">{clientName}, here's your quote</h2>
+      {/* Price — shown prominently */}
+      <div className="flex items-baseline gap-3 mt-3 mb-1">
         <p className="font-serif text-5xl font-bold" style={{ color: "#E8651A" }}>{estimate}</p>
       </div>
-      <p className="font-sans text-white/50 text-sm mb-6">Prepared exclusively for {clientName} · Final price confirmed on booking</p>
+      <p className="font-sans text-white/50 text-sm mb-6">Final price confirmed on booking</p>
 
       {/* Property summary — compact */}
       <div className="flex items-center gap-3 mb-6">
@@ -249,8 +252,9 @@ export default function ClientQuotePage() {
     }
   };
 
+  const [, navigate] = useLocation();
   const handleCta = () => {
-    window.open("https://www.thumbtack.com", "_blank");
+    navigate(`/q/${slug}/book`);
   };
 
   if (isLoading) {
@@ -361,7 +365,7 @@ export default function ClientQuotePage() {
             }}
           >
             {currentSlide === "intro" && <SlideIntro clientName={quote.clientName} />}
-            {currentSlide === "why-choose-us" && <SlideWhyChooseUs />}
+            {currentSlide === "why-choose-us" && <SlideWhyChooseUs clientName={quote.clientName} />}
             {currentSlide === "official-quote" && (
               <SlideOfficialQuote
                 clientName={quote.clientName}

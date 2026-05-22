@@ -8,6 +8,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import AdminNewQuote from "./pages/AdminNewQuote";
 import AdminEditQuote from "./pages/AdminEditQuote";
 import ClientQuotePage from "./pages/ClientQuotePage";
+import BookingPage from "./pages/BookingPage";
 import Home from "./pages/Home";
 
 function Router() {
@@ -18,6 +19,7 @@ function Router() {
       <Route path="/admin/new" component={AdminNewQuote} />
       <Route path="/admin/edit/:slug" component={AdminEditQuote} />
       <Route path="/q/:slug" component={ClientQuotePage} />
+      <Route path="/q/:slug/book" component={BookingPage} />
       <Route path="/404" component={NotFound} />
       <Route component={NotFound} />
     </Switch>
