@@ -70,7 +70,7 @@
 }
 
 .slide.active {
-  display: flex;
+  display: block;
 }
 
 @keyframes slideIn {

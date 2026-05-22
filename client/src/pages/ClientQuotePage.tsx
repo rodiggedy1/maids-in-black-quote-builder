@@ -33,7 +33,7 @@ function SlideIntro({ clientName }: { clientName: string }) {
       <div className="mb-6">
         <span className="text-xs tracking-[0.3em] uppercase text-ember font-sans font-medium">Your Personal Quote</span>
       </div>
-      <h1 className="font-serif text-5xl md:text-6xl font-bold text-white mb-4 leading-tight">
+      <h1 style={{ textAlign: "center", width: "100%" }} className="font-serif text-5xl md:text-6xl font-bold text-white mb-4 leading-tight">
         Maids in Black
       </h1>
       <div className="w-16 h-0.5 bg-ember mx-auto my-6" />
