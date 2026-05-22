@@ -139,6 +139,19 @@ export default function AdminBookings() {
                       </div>
                     )}
 
+                    {/* Preferred date */}
+                    {b.preferredDate && (
+                      <div className="flex items-start gap-3">
+                        <Calendar className="w-4 h-4 text-ember mt-0.5 shrink-0" />
+                        <div>
+                          <p className="font-sans text-[11px] text-white/35 uppercase tracking-wider mb-0.5">Preferred Date</p>
+                          <p className="font-sans text-sm text-white/80">
+                            {new Date(b.preferredDate + "T12:00:00").toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric" })}
+                          </p>
+                        </div>
+                      </div>
+                    )}
+
                     {/* Estimate */}
                     {estimate && (
                       <div className="flex items-start gap-3">

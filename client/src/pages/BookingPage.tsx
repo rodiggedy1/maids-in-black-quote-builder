@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useParams, useLocation } from "wouter";
 import { trpc } from "@/lib/trpc";
-import { Calendar, MapPin, Mail, CheckCircle2, ChevronLeft, MessageSquare } from "lucide-react";
+import { Calendar, MapPin, Mail, CheckCircle2, ChevronLeft, ChevronRight, MessageSquare } from "lucide-react";
 
 const TIME_OPTIONS: { id: "morning" | "midday" | "evening" | "flexible"; label: string; time: string; desc: string }[] = [
   { id: "morning", label: "Morning", time: "8:30 AM", desc: "Early start, fresh home by noon" },
@@ -9,6 +9,113 @@ const TIME_OPTIONS: { id: "morning" | "midday" | "evening" | "flexible"; label: 
   { id: "evening", label: "Afternoon", time: "4:30 PM", desc: "Ready for your evening" },
   { id: "flexible", label: "I'm completely flexible", time: "", desc: "We'll find the best slot for you" },
 ];
+
+const DAYS = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
+const MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+
+function formatDateDisplay(iso: string) {
+  const [y, m, d] = iso.split("-").map(Number);
+  return `${MONTHS[m - 1]} ${d}, ${y}`;
+}
+
+function toIso(year: number, month: number, day: number) {
+  return `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+}
+
+function InlineCalendar({ value, onChange }: { value: string; onChange: (iso: string) => void }) {
+  const today = new Date();
+  const [viewYear, setViewYear] = useState(today.getFullYear());
+  const [viewMonth, setViewMonth] = useState(today.getMonth());
+
+  const firstDay = new Date(viewYear, viewMonth, 1).getDay();
+  const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
+
+  const todayIso = toIso(today.getFullYear(), today.getMonth(), today.getDate());
+
+  const cells = useMemo(() => {
+    const arr: (number | null)[] = Array(firstDay).fill(null);
+    for (let d = 1; d <= daysInMonth; d++) arr.push(d);
+    return arr;
+  }, [firstDay, daysInMonth]);
+
+  function prevMonth() {
+    if (viewMonth === 0) { setViewMonth(11); setViewYear(y => y - 1); }
+    else setViewMonth(m => m - 1);
+  }
+  function nextMonth() {
+    if (viewMonth === 11) { setViewMonth(0); setViewYear(y => y + 1); }
+    else setViewMonth(m => m + 1);
+  }
+
+  const isPast = (day: number) => toIso(viewYear, viewMonth, day) < todayIso;
+  const isSelected = (day: number) => value === toIso(viewYear, viewMonth, day);
+  const isToday = (day: number) => toIso(viewYear, viewMonth, day) === todayIso;
+
+  // Don't allow navigating to months before current
+  const canGoPrev = viewYear > today.getFullYear() || (viewYear === today.getFullYear() && viewMonth > today.getMonth());
+
+  return (
+    <div className="bg-[#141414] border border-white/10 rounded-xl p-4 select-none">
+      {/* Month navigation */}
+      <div className="flex items-center justify-between mb-4">
+        <button
+          type="button"
+          onClick={prevMonth}
+          disabled={!canGoPrev}
+          className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors ${
+            canGoPrev ? "text-white/60 hover:text-white hover:bg-white/8" : "text-white/15 cursor-not-allowed"
+          }`}
+        >
+          <ChevronLeft size={16} />
+        </button>
+        <span className="font-sans font-semibold text-sm text-white">
+          {MONTHS[viewMonth]} {viewYear}
+        </span>
+        <button
+          type="button"
+          onClick={nextMonth}
+          className="w-8 h-8 rounded-lg flex items-center justify-center text-white/60 hover:text-white hover:bg-white/8 transition-colors"
+        >
+          <ChevronRight size={16} />
+        </button>
+      </div>
+
+      {/* Day headers */}
+      <div className="grid grid-cols-7 mb-2">
+        {DAYS.map(d => (
+          <div key={d} className="text-center font-sans text-xs text-white/30 py-1">{d}</div>
+        ))}
+      </div>
+
+      {/* Day cells */}
+      <div className="grid grid-cols-7 gap-y-1">
+        {cells.map((day, i) => {
+          if (!day) return <div key={`empty-${i}`} />;
+          const past = isPast(day);
+          const selected = isSelected(day);
+          const today_ = isToday(day);
+          return (
+            <button
+              key={day}
+              type="button"
+              disabled={past}
+              onClick={() => !past && onChange(toIso(viewYear, viewMonth, day))}
+              className={`
+                mx-auto w-8 h-8 rounded-full flex items-center justify-center font-sans text-sm transition-all
+                ${selected ? "bg-ember text-white font-semibold" : ""}
+                ${!selected && today_ ? "border border-ember/60 text-ember" : ""}
+                ${!selected && !today_ && !past ? "text-white/70 hover:bg-white/10 hover:text-white" : ""}
+                ${past ? "text-white/15 cursor-not-allowed" : ""}
+              `}
+            >
+              {day}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
 
 export default function BookingPage() {
   const params = useParams<{ slug: string }>();
@@ -21,18 +128,14 @@ export default function BookingPage() {
   const [address, setAddress] = useState("");
   const [bookingNotes, setBookingNotes] = useState("");
   const [timePreference, setTimePreference] = useState<"morning" | "midday" | "evening" | "flexible" | "">("");
+  const [preferredDate, setPreferredDate] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const submitBooking = trpc.quote.submitBooking.useMutation({
-    onSuccess: () => {
-      setSubmitted(true);
-    },
-    onError: (err) => {
-      setError(err.message);
-      setSubmitting(false);
-    },
+    onSuccess: () => setSubmitted(true),
+    onError: (err) => { setError(err.message); setSubmitting(false); },
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -43,7 +146,14 @@ export default function BookingPage() {
     }
     setError(null);
     setSubmitting(true);
-    submitBooking.mutate({ slug, email, address, timePreference: timePreference as "morning" | "midday" | "evening" | "flexible", bookingNotes: bookingNotes || undefined });
+    submitBooking.mutate({
+      slug,
+      email,
+      address,
+      timePreference: timePreference as "morning" | "midday" | "evening" | "flexible",
+      preferredDate: preferredDate || undefined,
+      bookingNotes: bookingNotes || undefined,
+    });
   };
 
   if (isLoading) {
@@ -82,6 +192,12 @@ export default function BookingPage() {
               <MapPin size={15} className="text-ember shrink-0 mt-0.5" />
               <span className="font-sans text-white/70 text-sm">{address}</span>
             </div>
+            {preferredDate && (
+              <div className="flex items-center gap-3">
+                <Calendar size={15} className="text-ember shrink-0" />
+                <span className="font-sans text-white/70 text-sm">{formatDateDisplay(preferredDate)}</span>
+              </div>
+            )}
             <div className="flex items-center gap-3">
               <Calendar size={15} className="text-ember shrink-0" />
               <span className="font-sans text-white/70 text-sm">
@@ -124,7 +240,7 @@ export default function BookingPage() {
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-7">
           {/* Email */}
           <div>
             <label className="block font-sans text-xs text-white/50 uppercase tracking-wider mb-2">
@@ -157,19 +273,18 @@ export default function BookingPage() {
             />
           </div>
 
-          {/* Booking notes */}
+          {/* Date picker */}
           <div>
-            <label className="block font-sans text-xs text-white/50 uppercase tracking-wider mb-2">
-              <MessageSquare size={12} className="inline mr-1.5 text-ember" />
-              Anything we should know? (optional)
+            <label className="block font-sans text-xs text-white/50 uppercase tracking-wider mb-3">
+              <Calendar size={12} className="inline mr-1.5 text-ember" />
+              Preferred date
+              {preferredDate && (
+                <span className="ml-2 text-ember normal-case tracking-normal font-medium">
+                  — {formatDateDisplay(preferredDate)}
+                </span>
+              )}
             </label>
-            <textarea
-              value={bookingNotes}
-              onChange={e => setBookingNotes(e.target.value)}
-              placeholder="Pets, parking, gate codes, areas to focus on…"
-              rows={3}
-              className="w-full bg-[#141414] border border-white/15 rounded-lg px-4 py-3 font-sans text-white text-sm placeholder:text-white/25 focus:outline-none focus:border-ember/60 transition-colors resize-none"
-            />
+            <InlineCalendar value={preferredDate} onChange={setPreferredDate} />
           </div>
 
           {/* Time preference */}
@@ -203,6 +318,21 @@ export default function BookingPage() {
                 </button>
               ))}
             </div>
+          </div>
+
+          {/* Booking notes */}
+          <div>
+            <label className="block font-sans text-xs text-white/50 uppercase tracking-wider mb-2">
+              <MessageSquare size={12} className="inline mr-1.5 text-ember" />
+              Anything we should know? (optional)
+            </label>
+            <textarea
+              value={bookingNotes}
+              onChange={e => setBookingNotes(e.target.value)}
+              placeholder="Pets, parking, gate codes, areas to focus on…"
+              rows={3}
+              className="w-full bg-[#141414] border border-white/15 rounded-lg px-4 py-3 font-sans text-white text-sm placeholder:text-white/25 focus:outline-none focus:border-ember/60 transition-colors resize-none"
+            />
           </div>
 
           {error && (

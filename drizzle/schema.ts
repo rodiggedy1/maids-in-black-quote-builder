@@ -43,6 +43,7 @@ export const bookings = mysqlTable("bookings", {
   email: varchar("email", { length: 320 }).notNull(),
   address: text("address").notNull(),
   timePreference: mysqlEnum("timePreference", ["morning", "midday", "evening", "flexible"]).notNull(),
+  preferredDate: varchar("preferredDate", { length: 16 }),
   notes: text("notes"),
   estimateMin: decimal("estimateMin", { precision: 10, scale: 2 }),
   estimateMax: decimal("estimateMax", { precision: 10, scale: 2 }),

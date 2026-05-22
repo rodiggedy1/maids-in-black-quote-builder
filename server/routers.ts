@@ -218,6 +218,7 @@ export const appRouter = router({
         email: z.string().email(),
         address: z.string().min(5),
         timePreference: z.enum(["morning", "midday", "evening", "flexible"]),
+        preferredDate: z.string().optional(),
         bookingNotes: z.string().optional(),
       }))
       .mutation(async ({ input }) => {
@@ -230,6 +231,7 @@ export const appRouter = router({
           email: input.email,
           address: input.address,
           timePreference: input.timePreference,
+          preferredDate: input.preferredDate ?? null,
           notes: input.bookingNotes ?? quote.notes ?? null,
           estimateMin: quote.estimateMin ?? null,
           estimateMax: quote.estimateMax ?? null,
@@ -245,9 +247,10 @@ export const appRouter = router({
           evening: "4:30 PM",
           flexible: "Completely flexible",
         };
+        const dateStr = input.preferredDate ? `\nPreferred Date: ${input.preferredDate}` : "";
         await notifyOwner({
           title: `New Booking Request — ${quote.clientName}`,
-          content: `Client: ${quote.clientName}\nEmail: ${input.email}\nAddress: ${input.address}\nTime Preference: ${timeLabels[input.timePreference]}\nEstimate: $${quote.estimateMin}–$${quote.estimateMax}`,
+          content: `Client: ${quote.clientName}\nEmail: ${input.email}\nAddress: ${input.address}\nTime Preference: ${timeLabels[input.timePreference]}${dateStr}\nEstimate: $${quote.estimateMin}–$${quote.estimateMax}`,
         });
         return { success: true };
       }),
