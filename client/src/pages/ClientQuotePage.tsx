@@ -105,11 +105,15 @@ function SlideOfficialQuote({
   ctaLabel: string;
   onCta: () => void;
 }) {
+  const estimate = formatEstimate(estimateMin, estimateMax);
   return (
     <div className="flex flex-col justify-center min-h-[520px] px-8 py-10">
       <span className="text-xs tracking-[0.3em] uppercase text-ember font-sans font-medium mb-4">Official Quote</span>
-      <h2 className="font-serif text-4xl font-bold text-white mb-1">Your Estimate</h2>
-      <p className="font-sans text-white/50 text-sm mb-8">Prepared exclusively for {clientName}</p>
+      {/* Price — shown prominently at the top */}
+      <div className="flex items-baseline gap-3 mb-1">
+        <p className="font-serif text-5xl font-bold" style={{ color: "#E8651A" }}>{estimate}</p>
+      </div>
+      <p className="font-sans text-white/50 text-sm mb-6">Prepared exclusively for {clientName} · Final price confirmed on booking</p>
 
       {/* Property summary — compact */}
       <div className="flex items-center gap-3 mb-6">
@@ -163,13 +167,8 @@ function SlideOfficialQuote({
         </div>
       )}
 
-      {/* Estimate */}
-      <div className="flex items-end justify-between border-t border-white/10 pt-5 mt-2">
-        <div>
-          <p className="font-sans text-xs text-white/40 uppercase tracking-wider mb-1">Estimated Total</p>
-          <p className="font-serif text-4xl font-bold text-ember">{formatEstimate(estimateMin, estimateMax)}</p>
-          <p className="font-sans text-white/35 text-xs mt-1">Final price confirmed on booking</p>
-        </div>
+      {/* CTA */}
+      <div className="flex justify-end border-t border-white/10 pt-5 mt-2">
         <button
           onClick={onCta}
           className="cta-pulse bg-ember hover:bg-ember/90 active:scale-95 text-white font-sans font-semibold text-sm px-6 py-3 rounded-lg transition-all duration-150"
@@ -313,27 +312,20 @@ export default function ClientQuotePage() {
               "linear-gradient(to bottom, rgba(10,10,10,0.45) 0%, transparent 25%, transparent 55%, rgba(10,10,10,0.85) 85%, #0A0A0A 100%)",
           }}
         />
-        {/* Brand overlay bottom */}
-        <div className="absolute bottom-0 left-0 right-0 z-20 px-6 pb-7 md:px-12">
-          <div className="flex items-end justify-between">
-            <div>
-              <p
-                className="font-sans text-xs tracking-[0.3em] uppercase mb-1.5"
-                style={{ color: "#E8651A" }}
-              >
-                Professional Cleaning
-              </p>
-              <h1 className="font-serif text-3xl md:text-5xl font-bold text-white" style={{ textShadow: "0 2px 24px rgba(0,0,0,0.7)" }}>
-                Maids in Black
-              </h1>
-            </div>
-            <div className="text-right hidden md:block">
-              <p className="font-sans text-xs text-white/50 mb-0.5 tracking-wider uppercase">Prepared for</p>
-              <p className="font-serif text-2xl text-white" style={{ textShadow: "0 2px 12px rgba(0,0,0,0.6)" }}>
-                {quote.clientName}
-              </p>
-            </div>
-          </div>
+        {/* Brand overlay bottom — centered */}
+        <div className="absolute bottom-0 left-0 right-0 z-20 px-6 pb-7 md:px-12 flex flex-col items-center text-center">
+          <p
+            className="font-sans text-xs tracking-[0.3em] uppercase mb-1.5"
+            style={{ color: "#E8651A" }}
+          >
+            Professional Cleaning
+          </p>
+          <h1 className="font-serif text-3xl md:text-5xl font-bold text-white" style={{ textShadow: "0 2px 24px rgba(0,0,0,0.7)" }}>
+            Maids in Black
+          </h1>
+          <p className="font-sans text-sm text-white/60 mt-1.5 tracking-wide">
+            Prepared for <span className="text-white font-medium">{quote.clientName}</span>
+          </p>
         </div>
       </div>
 
