@@ -7,6 +7,7 @@ import { ThemeProvider } from "./contexts/ThemeContext";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminNewQuote from "./pages/AdminNewQuote";
 import AdminEditQuote from "./pages/AdminEditQuote";
+import AdminBookings from "./pages/AdminBookings";
 import ClientQuotePage from "./pages/ClientQuotePage";
 import BookingPage from "./pages/BookingPage";
 import Home from "./pages/Home";
@@ -18,6 +19,7 @@ function Router() {
       <Route path="/admin" component={AdminDashboard} />
       <Route path="/admin/new" component={AdminNewQuote} />
       <Route path="/admin/edit/:slug" component={AdminEditQuote} />
+      <Route path="/admin/bookings" component={AdminBookings} />
       <Route path="/q/:slug" component={ClientQuotePage} />
       <Route path="/q/:slug/book" component={BookingPage} />
       <Route path="/404" component={NotFound} />

@@ -1,6 +1,6 @@
-import { eq } from "drizzle-orm";
+import { eq, desc } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, quotes, InsertQuote, Quote } from "../drizzle/schema";
+import { InsertUser, users, quotes, InsertQuote, Quote, bookings, InsertBooking, Booking } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -103,4 +103,25 @@ export async function deleteQuote(slug: string): Promise<void> {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   await db.delete(quotes).where(eq(quotes.slug, slug));
+}
+
+// ─── Booking helpers ──────────────────────────────────────────────────────────
+
+export type BookingRow = Booking;
+
+export async function createBooking(data: InsertBooking): Promise<BookingRow> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.insert(bookings).values(data);
+  const created = await db.select().from(bookings)
+    .where(eq(bookings.quoteSlug, data.quoteSlug))
+    .orderBy(desc(bookings.createdAt))
+    .limit(1);
+  return created[0];
+}
+
+export async function getAllBookings(): Promise<BookingRow[]> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  return db.select().from(bookings).orderBy(desc(bookings.createdAt));
 }

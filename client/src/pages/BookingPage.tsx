@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useParams, useLocation } from "wouter";
 import { trpc } from "@/lib/trpc";
-import { Calendar, MapPin, Mail, CheckCircle2, ChevronLeft } from "lucide-react";
+import { Calendar, MapPin, Mail, CheckCircle2, ChevronLeft, MessageSquare } from "lucide-react";
 
 const TIME_OPTIONS: { id: "morning" | "midday" | "evening" | "flexible"; label: string; time: string; desc: string }[] = [
   { id: "morning", label: "Morning", time: "8:30 AM", desc: "Early start, fresh home by noon" },
@@ -19,6 +19,7 @@ export default function BookingPage() {
 
   const [email, setEmail] = useState("");
   const [address, setAddress] = useState("");
+  const [bookingNotes, setBookingNotes] = useState("");
   const [timePreference, setTimePreference] = useState<"morning" | "midday" | "evening" | "flexible" | "">("");
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -42,7 +43,7 @@ export default function BookingPage() {
     }
     setError(null);
     setSubmitting(true);
-    submitBooking.mutate({ slug, email, address, timePreference: timePreference as "morning" | "midday" | "evening" | "flexible" });
+    submitBooking.mutate({ slug, email, address, timePreference: timePreference as "morning" | "midday" | "evening" | "flexible", bookingNotes: bookingNotes || undefined });
   };
 
   if (isLoading) {
@@ -153,6 +154,21 @@ export default function BookingPage() {
               placeholder="123 Main St, City, State"
               required
               className="w-full bg-[#141414] border border-white/15 rounded-lg px-4 py-3 font-sans text-white text-sm placeholder:text-white/25 focus:outline-none focus:border-ember/60 transition-colors"
+            />
+          </div>
+
+          {/* Booking notes */}
+          <div>
+            <label className="block font-sans text-xs text-white/50 uppercase tracking-wider mb-2">
+              <MessageSquare size={12} className="inline mr-1.5 text-ember" />
+              Anything we should know? (optional)
+            </label>
+            <textarea
+              value={bookingNotes}
+              onChange={e => setBookingNotes(e.target.value)}
+              placeholder="Pets, parking, gate codes, areas to focus on…"
+              rows={3}
+              className="w-full bg-[#141414] border border-white/15 rounded-lg px-4 py-3 font-sans text-white text-sm placeholder:text-white/25 focus:outline-none focus:border-ember/60 transition-colors resize-none"
             />
           </div>
 

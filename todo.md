@@ -38,3 +38,10 @@
 - [x] Vitest: quote.create procedure test
 - [x] Vitest: quote.getBySlug procedure test
 - [x] Vitest: LLM parse output schema validation test
+
+## Bookings Feature
+- [x] Database: bookings table (id, quoteSlug, clientName, email, address, timePreference, notes, createdAt)
+- [x] Server: persist booking on submitBooking mutation
+- [x] Server: listBookings admin procedure
+- [x] Admin: Bookings page showing all submissions with name, email, address, time, notes
+- [x] Admin: navigation link to Bookings section

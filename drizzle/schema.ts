@@ -35,3 +35,22 @@ export const quotes = mysqlTable("quotes", {
 
 export type Quote = typeof quotes.$inferSelect;
 export type InsertQuote = typeof quotes.$inferInsert;
+
+export const bookings = mysqlTable("bookings", {
+  id: int("id").autoincrement().primaryKey(),
+  quoteSlug: varchar("quoteSlug", { length: 64 }).notNull(),
+  clientName: varchar("clientName", { length: 256 }).notNull(),
+  email: varchar("email", { length: 320 }).notNull(),
+  address: text("address").notNull(),
+  timePreference: mysqlEnum("timePreference", ["morning", "midday", "evening", "flexible"]).notNull(),
+  notes: text("notes"),
+  estimateMin: decimal("estimateMin", { precision: 10, scale: 2 }),
+  estimateMax: decimal("estimateMax", { precision: 10, scale: 2 }),
+  bedrooms: int("bedrooms"),
+  bathrooms: int("bathrooms"),
+  serviceType: varchar("serviceType", { length: 128 }),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type Booking = typeof bookings.$inferSelect;
+export type InsertBooking = typeof bookings.$inferInsert;

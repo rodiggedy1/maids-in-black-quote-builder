@@ -1,7 +1,7 @@
 import { useAuth } from "@/_core/hooks/useAuth";
 import { getLoginUrl } from "@/const";
 import { useLocation } from "wouter";
-import { LayoutDashboard, PlusCircle, LogOut } from "lucide-react";
+import { LayoutDashboard, PlusCircle, LogOut, CalendarCheck } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
 
@@ -34,6 +34,7 @@ export default function AdminLayout({ children, title }: AdminLayoutProps) {
   const navItems = [
     { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
     { href: "/admin/new", label: "New Quote", icon: PlusCircle },
+    { href: "/admin/bookings", label: "Bookings", icon: CalendarCheck },
   ];
 
   return (

@@ -6,7 +6,7 @@ import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
 import { invokeLLM } from "./_core/llm";
-import { createQuote, getQuoteBySlug, getAllQuotes, updateQuote, deleteQuote } from "./db";
+import { createQuote, getQuoteBySlug, getAllQuotes, updateQuote, deleteQuote, createBooking, getAllBookings } from "./db";
 import { ENV } from "./_core/env";
 
 // ─── LLM Parser ──────────────────────────────────────────────────────────────
@@ -187,10 +187,25 @@ export const appRouter = router({
         email: z.string().email(),
         address: z.string().min(5),
         timePreference: z.enum(["morning", "midday", "evening", "flexible"]),
+        bookingNotes: z.string().optional(),
       }))
       .mutation(async ({ input }) => {
         const quote = await getQuoteBySlug(input.slug);
         if (!quote) throw new TRPCError({ code: "NOT_FOUND", message: "Quote not found" });
+        // Persist booking to database — use client-submitted notes if provided, fall back to quote notes
+        await createBooking({
+          quoteSlug: input.slug,
+          clientName: quote.clientName,
+          email: input.email,
+          address: input.address,
+          timePreference: input.timePreference,
+          notes: input.bookingNotes ?? quote.notes ?? null,
+          estimateMin: quote.estimateMin ?? null,
+          estimateMax: quote.estimateMax ?? null,
+          bedrooms: quote.bedrooms,
+          bathrooms: quote.bathrooms,
+          serviceType: quote.serviceType,
+        });
         // Notify owner of new booking request
         const { notifyOwner } = await import("./_core/notification");
         const timeLabels: Record<string, string> = {
@@ -204,6 +219,15 @@ export const appRouter = router({
           content: `Client: ${quote.clientName}\nEmail: ${input.email}\nAddress: ${input.address}\nTime Preference: ${timeLabels[input.timePreference]}\nEstimate: $${quote.estimateMin}–$${quote.estimateMax}`,
         });
         return { success: true };
+      }),
+
+    // Admin: list all bookings
+    listBookings: protectedProcedure
+      .query(async ({ ctx }) => {
+        if (ctx.user.openId !== ENV.ownerOpenId && ctx.user.role !== "admin") {
+          throw new TRPCError({ code: "FORBIDDEN" });
+        }
+        return getAllBookings();
       }),
   }),
 });
