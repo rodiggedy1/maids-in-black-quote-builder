@@ -192,15 +192,10 @@ export default function BookingPage() {
               <MapPin size={15} className="text-ember shrink-0 mt-0.5" />
               <span className="font-sans text-white/70 text-sm">{address}</span>
             </div>
-            {preferredDate && (
-              <div className="flex items-center gap-3">
-                <Calendar size={15} className="text-ember shrink-0" />
-                <span className="font-sans text-white/70 text-sm">{formatDateDisplay(preferredDate)}</span>
-              </div>
-            )}
             <div className="flex items-center gap-3">
               <Calendar size={15} className="text-ember shrink-0" />
               <span className="font-sans text-white/70 text-sm">
+                {preferredDate ? `${formatDateDisplay(preferredDate)} · ` : ""}
                 {TIME_OPTIONS.find(t => t.id === timePreference)?.label}
                 {TIME_OPTIONS.find(t => t.id === timePreference)?.time ? ` · ${TIME_OPTIONS.find(t => t.id === timePreference)?.time}` : ""}
               </span>
