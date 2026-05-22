@@ -30,18 +30,18 @@ function formatEstimate(min: string | null, max: string | null) {
 
 function SlideIntro({ clientName }: { clientName: string }) {
   return (
-    <div className="flex flex-col items-center justify-center min-h-[520px] text-center px-8 py-12">
+    <div className="flex flex-col items-center justify-center min-h-[320px] md:min-h-[520px] text-center px-6 md:px-8 py-10 md:py-12">
       <div className="mb-6">
         <span className="text-xs tracking-[0.3em] uppercase text-ember font-sans font-medium">Your Personal Quote</span>
       </div>
-      <h1 style={{ textAlign: "center", width: "100%" }} className="font-serif text-5xl md:text-6xl font-bold text-white mb-4 leading-tight">
+      <h1 style={{ textAlign: "center", width: "100%" }} className="font-serif text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-4 leading-tight">
         Maids in Black
       </h1>
       <div className="w-16 h-0.5 bg-ember mx-auto my-6" />
-      <p className="font-serif text-2xl text-white/90 italic mb-3">
+      <p className="font-serif text-xl md:text-2xl text-white/90 italic mb-3">
         Hello, {clientName} 👋
       </p>
-      <p className="font-sans text-white/60 text-base max-w-md leading-relaxed">
+      <p className="font-sans text-white/60 text-sm md:text-base max-w-md leading-relaxed">
         We've prepared a personalized cleaning quote just for you. Swipe through to see exactly what's included and what to expect.
       </p>
       <div className="mt-10 flex items-center gap-2 text-white/30 text-xs font-sans tracking-widest uppercase">
@@ -61,13 +61,13 @@ function SlideWhyChooseUs({ clientName }: { clientName: string }) {
   ];
 
   return (
-    <div className="flex flex-col justify-center min-h-[520px] px-8 py-12">
+    <div className="flex flex-col justify-center min-h-[320px] md:min-h-[520px] px-6 md:px-8 py-8 md:py-12">
       <span className="text-xs tracking-[0.3em] uppercase text-ember font-sans font-medium mb-4">Why Choose Us</span>
-      <h2 className="font-serif text-4xl font-bold text-white mb-3 leading-tight">
+      <h2 className="font-serif text-2xl md:text-4xl font-bold text-white mb-3 leading-tight">
         Why folks love us, {clientName}
       </h2>
       <p className="font-sans text-white/45 text-sm mb-8 leading-relaxed">Here's what our clients say keeps them coming back.</p>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-5">
         {reasons.map(({ icon: Icon, title, desc }) => (
           <div key={title} className="flex gap-4 p-4 rounded-lg bg-white/5 border border-white/10">
             <div className="shrink-0 w-10 h-10 rounded-full bg-ember/15 flex items-center justify-center">
@@ -109,12 +109,12 @@ function SlideOfficialQuote({
 }) {
   const estimate = formatEstimate(estimateMin, estimateMax);
   return (
-    <div className="flex flex-col justify-center min-h-[520px] px-8 py-10">
+    <div className="flex flex-col justify-center min-h-0 md:min-h-[520px] px-5 md:px-8 py-8 md:py-10">
       <span className="text-xs tracking-[0.3em] uppercase text-ember font-sans font-medium mb-3">Official Quote</span>
-      <h2 className="font-serif text-3xl font-bold text-white mb-1">{clientName}, here's your quote</h2>
+      <h2 className="font-serif text-2xl md:text-3xl font-bold text-white mb-1">{clientName}, here's your quote</h2>
       {/* Price — shown prominently */}
       <div className="flex items-baseline gap-3 mt-3 mb-1">
-        <p className="font-serif text-5xl font-bold" style={{ color: "#E8651A" }}>{estimate}</p>
+        <p className="font-serif text-4xl md:text-5xl font-bold" style={{ color: "#E8651A" }}>{estimate}</p>
       </div>
       <p className="font-sans text-white/50 text-sm mb-6">Final price confirmed on booking</p>
 
@@ -129,7 +129,7 @@ function SlideOfficialQuote({
       </div>
 
       {/* Cleaning scope */}
-      <div className="grid grid-cols-2 gap-3 mb-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 md:gap-3 mb-5">
         {[
           { label: "Kitchen", items: ["Counters & surfaces", "Sink & fixtures", "Cabinet exteriors"] },
           { label: "Bathrooms", items: ["Toilets & sinks", "Shower & tub", "Mirrors & fixtures"] },
@@ -192,9 +192,9 @@ function SlideWhatHappensNext({ ctaLabel, onCta }: { ctaLabel: string; onCta: ()
   ];
 
   return (
-    <div className="flex flex-col justify-center min-h-[520px] px-8 py-12">
+    <div className="flex flex-col justify-center min-h-[320px] md:min-h-[520px] px-6 md:px-8 py-8 md:py-12">
       <span className="text-xs tracking-[0.3em] uppercase text-ember font-sans font-medium mb-4">What Happens Next</span>
-      <h2 className="font-serif text-4xl font-bold text-white mb-10">Your Journey to Clean</h2>
+      <h2 className="font-serif text-2xl md:text-4xl font-bold text-white mb-6 md:mb-10">Your Journey to Clean</h2>
 
       <div className="space-y-5 mb-10">
         {steps.map(({ num, title, desc }) => (
@@ -334,9 +334,9 @@ export default function ClientQuotePage() {
       </div>
 
       {/* Quote deck */}
-      <div className="max-w-2xl mx-auto px-4 py-6">
+      <div className="max-w-2xl mx-auto px-3 sm:px-4 py-4 md:py-6">
         {/* Slide nav tabs */}
-        <div className="flex gap-1 mb-6 overflow-x-auto pb-1 scrollbar-hide">
+        <div className="flex gap-1 mb-4 md:mb-6 overflow-x-auto pb-1 scrollbar-hide">
           {SLIDE_ORDER.map((id, i) => (
             <button
               key={id}
@@ -355,7 +355,7 @@ export default function ClientQuotePage() {
         {/* Slide content */}
         <div
           className="bg-[#141414] border border-white/10 rounded-2xl overflow-hidden"
-          style={{ minHeight: 520 }}
+          style={{ minHeight: undefined }}
         >
           <div
             key={currentSlide}

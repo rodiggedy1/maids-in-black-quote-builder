@@ -69,7 +69,7 @@ export default function BookingPage() {
           <div className="w-20 h-20 rounded-full bg-ember/15 flex items-center justify-center mx-auto mb-6">
             <CheckCircle2 size={40} className="text-ember" />
           </div>
-          <h1 className="font-serif text-4xl font-bold text-white mb-3">You're all set, {quote.clientName}!</h1>
+          <h1 className="font-serif text-3xl md:text-4xl font-bold text-white mb-3">You're all set, {quote.clientName}!</h1>
           <p className="font-sans text-white/55 text-base leading-relaxed mb-8">
             We've received your booking request. You'll get a confirmation email shortly with all the details. We can't wait to make your home shine. ✨
           </p>
@@ -116,7 +116,7 @@ export default function BookingPage() {
         {/* Greeting */}
         <div className="mb-8">
           <span className="text-xs tracking-[0.3em] uppercase text-ember font-sans font-medium">Almost there</span>
-          <h1 className="font-serif text-4xl font-bold text-white mt-2 mb-2">
+          <h1 className="font-serif text-3xl md:text-4xl font-bold text-white mt-2 mb-2">
             Let's lock in your clean, {quote.clientName} 🗓️
           </h1>
           <p className="font-sans text-white/50 text-sm leading-relaxed">
