@@ -1,5 +1,27 @@
 {
   "version": "7",
   "dialect": "mysql",
-  "entries": []
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1779424415921,
+      "tag": "0000_glamorous_dark_phoenix",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1779424540457,
+      "tag": "0001_mature_scorpion",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1779424640249,
+      "tag": "0002_abnormal_stellaris",
+      "breakpoints": true
+    }
+  ]
 }
