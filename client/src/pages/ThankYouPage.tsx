@@ -201,14 +201,14 @@ export default function ThankYouPage() {
               </div>
             )}
             {/* Notes */}
-            {(booking?.bookingNotes || quote.notes) && (
+            {(booking?.notes || quote.notes) && (
               <div className="flex items-start gap-4 px-6 py-4">
                 <div className="shrink-0 w-9 h-9 rounded-full bg-ember/10 flex items-center justify-center mt-0.5">
                   <FileText size={15} className="text-ember" />
                 </div>
                 <div>
                   <p className="font-sans text-white/40 text-xs uppercase tracking-wider mb-0.5">Notes</p>
-                  <p className="font-sans text-white/70 text-sm leading-relaxed">{booking?.bookingNotes || quote.notes}</p>
+                  <p className="font-sans text-white/70 text-sm leading-relaxed">{booking?.notes || quote.notes}</p>
                 </div>
               </div>
             )}
