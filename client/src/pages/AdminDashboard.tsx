@@ -3,7 +3,7 @@ import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { useLocation } from "wouter";
-import { Copy, Pencil, Trash2, PlusCircle, ExternalLink } from "lucide-react";
+import { Copy, Pencil, Trash2, PlusCircle, ExternalLink, Heart } from "lucide-react";
 import { format } from "date-fns";
 
 export default function AdminDashboard() {
@@ -21,7 +21,13 @@ export default function AdminDashboard() {
   const copyLink = (slug: string) => {
     const url = `${window.location.origin}/q/${slug}`;
     navigator.clipboard.writeText(url);
-    toast.success("Link copied to clipboard");
+    toast.success("Quote link copied");
+  };
+
+  const copyThankYouLink = (slug: string) => {
+    const url = `${window.location.origin}/q/${slug}/thankyou`;
+    navigator.clipboard.writeText(url);
+    toast.success("Thank you link copied");
   };
 
   const formatEstimate = (min: string | null, max: string | null) => {
@@ -114,9 +120,18 @@ export default function AdminDashboard() {
                         variant="ghost"
                         className="h-8 w-8 p-0 text-muted-foreground hover:text-ember"
                         onClick={() => copyLink(quote.slug)}
-                        title="Copy shareable link"
+                        title="Copy quote link"
                       >
                         <Copy size={14} />
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        className="h-8 w-8 p-0 text-muted-foreground hover:text-ember"
+                        onClick={() => copyThankYouLink(quote.slug)}
+                        title="Copy thank you page link"
+                      >
+                        <Heart size={14} />
                       </Button>
                       <Button
                         size="sm"
