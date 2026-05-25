@@ -1,12 +1,13 @@
 import { useParams } from "wouter";
 import { trpc } from "@/lib/trpc";
-import { Phone, MapPin, Star } from "lucide-react";
+import { Phone, MapPin, Star, Home, User, FileText, Calendar, Clock } from "lucide-react";
 
 export default function ThankYouPage() {
   const params = useParams<{ slug: string }>();
   const slug = params.slug;
 
   const { data: quote, isLoading, error } = trpc.quote.getBySlug.useQuery({ slug });
+  const { data: booking } = trpc.quote.getLatestBooking.useQuery({ slug });
 
   if (isLoading) {
     return (
@@ -125,6 +126,93 @@ export default function ThankYouPage() {
               </div>
             </div>
           ))}
+        </div>
+
+        <div className="w-16 h-0.5 bg-ember/40 mx-auto my-10" />
+
+        {/* Job Details */}
+        <div className="mb-8">
+          <span className="text-xs tracking-[0.3em] uppercase text-ember font-sans font-medium">Your Booking Summary</span>
+          <h3 className="font-serif text-xl md:text-2xl font-bold text-white mt-2 mb-5">Job Details</h3>
+          <div className="bg-[#141414] border border-white/10 rounded-2xl overflow-hidden divide-y divide-white/8">
+            {/* Name */}
+            <div className="flex items-center gap-4 px-6 py-4">
+              <div className="shrink-0 w-9 h-9 rounded-full bg-ember/10 flex items-center justify-center">
+                <User size={15} className="text-ember" />
+              </div>
+              <div>
+                <p className="font-sans text-white/40 text-xs uppercase tracking-wider mb-0.5">Client</p>
+                <p className="font-sans text-white text-sm font-medium">{quote.clientName}</p>
+              </div>
+            </div>
+            {/* Home size */}
+            <div className="flex items-center gap-4 px-6 py-4">
+              <div className="shrink-0 w-9 h-9 rounded-full bg-ember/10 flex items-center justify-center">
+                <Home size={15} className="text-ember" />
+              </div>
+              <div>
+                <p className="font-sans text-white/40 text-xs uppercase tracking-wider mb-0.5">Home Size</p>
+                <p className="font-sans text-white text-sm font-medium">
+                  {quote.bedrooms} bed / {quote.bathrooms} bath &middot; {quote.serviceType}
+                </p>
+              </div>
+            </div>
+            {/* Address — from booking if available */}
+            {booking?.address && (
+              <div className="flex items-center gap-4 px-6 py-4">
+                <div className="shrink-0 w-9 h-9 rounded-full bg-ember/10 flex items-center justify-center">
+                  <MapPin size={15} className="text-ember" />
+                </div>
+                <div>
+                  <p className="font-sans text-white/40 text-xs uppercase tracking-wider mb-0.5">Address</p>
+                  <p className="font-sans text-white text-sm font-medium">{booking.address}</p>
+                </div>
+              </div>
+            )}
+            {/* Preferred date */}
+            {booking?.preferredDate && (
+              <div className="flex items-center gap-4 px-6 py-4">
+                <div className="shrink-0 w-9 h-9 rounded-full bg-ember/10 flex items-center justify-center">
+                  <Calendar size={15} className="text-ember" />
+                </div>
+                <div>
+                  <p className="font-sans text-white/40 text-xs uppercase tracking-wider mb-0.5">Preferred Date</p>
+                  <p className="font-sans text-white text-sm font-medium">
+                    {new Date(booking.preferredDate + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+                  </p>
+                </div>
+              </div>
+            )}
+            {/* Time preference */}
+            {booking?.timePreference && (
+              <div className="flex items-center gap-4 px-6 py-4">
+                <div className="shrink-0 w-9 h-9 rounded-full bg-ember/10 flex items-center justify-center">
+                  <Clock size={15} className="text-ember" />
+                </div>
+                <div>
+                  <p className="font-sans text-white/40 text-xs uppercase tracking-wider mb-0.5">Arrival Window</p>
+                  <p className="font-sans text-white text-sm font-medium capitalize">
+                    {booking.timePreference === 'morning' ? 'Morning — around 8:30 AM' :
+                     booking.timePreference === 'midday' ? 'Midday — around 11:30 AM' :
+                     booking.timePreference === 'evening' ? 'Evening — around 3:00 PM' :
+                     'Flexible'}
+                  </p>
+                </div>
+              </div>
+            )}
+            {/* Notes */}
+            {(booking?.bookingNotes || quote.notes) && (
+              <div className="flex items-start gap-4 px-6 py-4">
+                <div className="shrink-0 w-9 h-9 rounded-full bg-ember/10 flex items-center justify-center mt-0.5">
+                  <FileText size={15} className="text-ember" />
+                </div>
+                <div>
+                  <p className="font-sans text-white/40 text-xs uppercase tracking-wider mb-0.5">Notes</p>
+                  <p className="font-sans text-white/70 text-sm leading-relaxed">{booking?.bookingNotes || quote.notes}</p>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
 
         <div className="w-16 h-0.5 bg-ember/40 mx-auto my-10" />

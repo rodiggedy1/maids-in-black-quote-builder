@@ -6,7 +6,7 @@ import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
 import { invokeLLM } from "./_core/llm";
-import { createQuote, getQuoteBySlug, getAllQuotes, updateQuote, deleteQuote, createBooking, getAllBookings } from "./db";
+import { createQuote, getQuoteBySlug, getAllQuotes, updateQuote, deleteQuote, createBooking, getAllBookings, getLatestBookingBySlug } from "./db";
 import { ENV } from "./_core/env";
 
 // ─── LLM Parser ──────────────────────────────────────────────────────────────
@@ -108,6 +108,13 @@ export const appRouter = router({
         const quote = await getQuoteBySlug(input.slug);
         if (!quote) throw new TRPCError({ code: "NOT_FOUND", message: "Quote not found" });
         return quote;
+      }),
+
+    // Public: get latest booking for a quote slug (for thank you page)
+    getLatestBooking: publicProcedure
+      .input(z.object({ slug: z.string() }))
+      .query(async ({ input }) => {
+        return getLatestBookingBySlug(input.slug);
       }),
 
     // Admin: parse raw text with LLM (preview, no save)

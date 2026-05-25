@@ -120,6 +120,16 @@ export async function createBooking(data: InsertBooking): Promise<BookingRow> {
   return created[0];
 }
 
+export async function getLatestBookingBySlug(quoteSlug: string): Promise<BookingRow | null> {
+  const db = await getDb();
+  if (!db) return null;
+  const rows = await db.select().from(bookings)
+    .where(eq(bookings.quoteSlug, quoteSlug))
+    .orderBy(desc(bookings.createdAt))
+    .limit(1);
+  return rows[0] ?? null;
+}
+
 export async function getAllBookings(): Promise<BookingRow[]> {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
