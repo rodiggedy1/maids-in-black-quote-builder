@@ -11,6 +11,7 @@ import AdminBookings from "./pages/AdminBookings";
 import ClientQuotePage from "./pages/ClientQuotePage";
 import BookingPage from "./pages/BookingPage";
 import ThankYouPage from "./pages/ThankYouPage";
+import WelcomePage from "./pages/WelcomePage";
 import Home from "./pages/Home";
 
 function Router() {
@@ -24,6 +25,7 @@ function Router() {
       <Route path="/q/:slug" component={ClientQuotePage} />
       <Route path="/q/:slug/book" component={BookingPage} />
       <Route path="/q/:slug/thankyou" component={ThankYouPage} />
+      <Route path="/welcome/:name" component={WelcomePage} />
       <Route path="/404" component={NotFound} />
       <Route component={NotFound} />
     </Switch>
