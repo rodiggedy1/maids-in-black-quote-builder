@@ -3,8 +3,9 @@ import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { useLocation } from "wouter";
-import { Copy, Pencil, Trash2, PlusCircle, ExternalLink, Heart } from "lucide-react";
+import { Copy, Pencil, Trash2, PlusCircle, ExternalLink, Heart, Link2 } from "lucide-react";
 import { format } from "date-fns";
+import { useState } from "react";
 
 export default function AdminDashboard() {
   const [, navigate] = useLocation();
@@ -40,8 +41,40 @@ export default function AdminDashboard() {
     return "—";
   };
 
+  const [welcomeName, setWelcomeName] = useState("");
+
+  const generateWelcomeLink = () => {
+    const name = welcomeName.trim();
+    if (!name) { toast.error("Enter a name first"); return; }
+    const url = `${window.location.origin}/welcome/${encodeURIComponent(name)}`;
+    navigator.clipboard.writeText(url);
+    toast.success(`Welcome link for ${name} copied!`);
+  };
+
   return (
     <AdminLayout title="All Quotes">
+      {/* Welcome Link Generator */}
+      <div className="mb-6 p-4 rounded-xl border border-white/10 bg-secondary/30">
+        <p className="text-xs uppercase tracking-widest text-muted-foreground font-medium mb-3">Generate Welcome Link</p>
+        <div className="flex gap-2">
+          <input
+            type="text"
+            value={welcomeName}
+            onChange={e => setWelcomeName(e.target.value)}
+            onKeyDown={e => e.key === "Enter" && generateWelcomeLink()}
+            placeholder="Client first name…"
+            className="flex-1 bg-background border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ember"
+          />
+          <Button
+            onClick={generateWelcomeLink}
+            className="bg-ember hover:bg-ember/90 text-white gap-2 shrink-0"
+          >
+            <Link2 size={15} />
+            Copy Link
+          </Button>
+        </div>
+      </div>
+
       <div className="flex justify-between items-center mb-6">
         <p className="text-muted-foreground text-sm">
           {quotes?.length ?? 0} quote{quotes?.length !== 1 ? "s" : ""} created
