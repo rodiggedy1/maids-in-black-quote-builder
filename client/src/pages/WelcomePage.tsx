@@ -56,8 +56,8 @@ export default function WelcomePage() {
     {
       num: "05",
       icon: Headphones,
-      title: "7 Days of Customer Support",
-      desc: "After your cleaning, we stay with you. Reach us by email, text, or phone for a full 7 days — whether you have a question, need a touch-up, or just want to rebook. We're here.",
+      title: "7 Days a Week Customer Support",
+      desc: "We're available 7 days a week — so whenever you need us, we're here. Whether you have a question before your service, need a touch-up after, or just want to rebook, reach us by phone, text, or email any day of the week.",
     },
   ];
 
@@ -207,13 +207,24 @@ export default function WelcomePage() {
             No forms to fill out. No stress.
           </p>
           <div className="mt-6 pt-5 border-t border-white/10">
-            <p className="font-sans text-white/40 text-xs uppercase tracking-widest mb-1">Call or text us</p>
-            <a
-              href="tel:2028885362"
-              className="font-serif text-2xl text-white hover:text-ember transition-colors duration-150"
-            >
-              (202) 888-5362
-            </a>
+            <p className="font-sans text-white/40 text-xs uppercase tracking-widest mb-3">Reach us directly</p>
+            <div className="flex gap-3 justify-center">
+              <a
+                href="tel:2028885362"
+                className="flex items-center gap-2 bg-ember hover:bg-ember/90 active:scale-95 text-white font-sans font-semibold text-sm px-5 py-3 rounded-lg transition-all duration-150"
+              >
+                <Phone size={15} />
+                Call Us
+              </a>
+              <a
+                href="sms:2028885362"
+                className="flex items-center gap-2 bg-white/10 hover:bg-white/15 active:scale-95 text-white font-sans font-semibold text-sm px-5 py-3 rounded-lg transition-all duration-150"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                Text Us
+              </a>
+            </div>
+            <p className="font-sans text-white/30 text-xs mt-3">(202) 888-5362</p>
           </div>
         </div>
 
