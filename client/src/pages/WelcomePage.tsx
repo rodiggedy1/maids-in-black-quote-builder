@@ -1,11 +1,9 @@
 import { useParams } from "wouter";
-import { CheckCircle2, Star, MapPin, Sparkles, Phone, Calendar } from "lucide-react";
-import { useLocation } from "wouter";
+import { CheckCircle2, Star, MapPin, Sparkles, Phone } from "lucide-react";
 
 export default function WelcomePage() {
   const params = useParams<{ name: string }>();
   const clientName = decodeURIComponent(params.name || "there");
-  const [, navigate] = useLocation();
 
   const reasons = [
     {
@@ -183,17 +181,28 @@ export default function WelcomePage() {
         </div>
 
         {/* CTA */}
-        <div className="flex flex-col items-center gap-4 pt-2 pb-4">
-          <button
-            onClick={() => navigate("/q/" + encodeURIComponent(params.name || "") + "/book")}
-            className="bg-ember hover:bg-ember/90 active:scale-95 text-white font-sans font-semibold text-base px-10 py-4 rounded-lg transition-all duration-150 flex items-center gap-3"
-          >
-            <Calendar size={18} />
-            Book My Cleaning
-          </button>
-          <p className="font-sans text-white/30 text-xs">
-            No charge until after your service is complete
+        <div className="bg-[#141414] border border-ember/30 rounded-2xl px-6 md:px-8 py-8 text-center">
+          <div className="w-12 h-12 rounded-full bg-ember/15 flex items-center justify-center mx-auto mb-4">
+            <Phone size={22} className="text-ember" />
+          </div>
+          <h3 className="font-serif text-xl md:text-2xl font-bold text-white mb-3 leading-tight">
+            Ready to get scheduled, {clientName}?
+          </h3>
+          <p className="font-sans text-white/65 text-sm md:text-base leading-relaxed max-w-sm mx-auto mb-2">
+            All we need is your <span className="text-white font-medium">name, phone, and email</span> — and we'll take care of the rest.
           </p>
+          <p className="font-sans text-ember text-sm font-semibold tracking-wide">
+            No forms to fill out. No stress.
+          </p>
+          <div className="mt-6 pt-5 border-t border-white/10">
+            <p className="font-sans text-white/40 text-xs uppercase tracking-widest mb-1">Call or text us</p>
+            <a
+              href="tel:2028885362"
+              className="font-serif text-2xl text-white hover:text-ember transition-colors duration-150"
+            >
+              (202) 888-5362
+            </a>
+          </div>
         </div>
 
       </div>
