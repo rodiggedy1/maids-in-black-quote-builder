@@ -1,5 +1,5 @@
 import { useParams } from "wouter";
-import { CheckCircle2, Star, MapPin, Sparkles, Phone } from "lucide-react";
+import { CheckCircle2, Star, MapPin, Sparkles, Phone, CalendarCheck, Mail, Navigation, Headphones } from "lucide-react";
 
 export default function WelcomePage() {
   const params = useParams<{ name: string }>();
@@ -31,21 +31,33 @@ export default function WelcomePage() {
   const steps = [
     {
       num: "01",
-      icon: Phone,
-      title: "We'll call to get a card on file",
-      desc: "Expect a call from (202) 888-5362. This secures your booking — you're not charged until after the service.",
+      icon: CalendarCheck,
+      title: "Book Your Service",
+      desc: "Just give us your name, phone, and email — we handle everything else. No lengthy forms, no back-and-forth. We'll confirm your date and get a card on file to secure your spot.",
     },
     {
       num: "02",
-      icon: MapPin,
-      title: "Live tracking on the day",
-      desc: "You'll get a link to see your team's real-time updates — ETAs, arrival time, and more.",
+      icon: Mail,
+      title: "Confirmation Email",
+      desc: "Once you're booked, you'll receive a confirmation email with all the details — date, time window, and what to expect. Everything in one place so there are no surprises.",
     },
     {
       num: "03",
-      icon: Star,
-      title: "Share your experience",
-      desc: "After your cleaning, a quick review helps other homeowners find us and means the world to our team.",
+      icon: Navigation,
+      title: "Live Tracking on the Day",
+      desc: "On the morning of your service, we'll send you a link so you can follow your team in real time — see when they're on the way, get live ETAs, and know the exact moment they arrive.",
+    },
+    {
+      num: "04",
+      icon: Sparkles,
+      title: "Team Arrives & Does a Great Job",
+      desc: "Your Maids in Black team shows up on time, fully equipped, and ready to work. We treat your home with care and attention to detail — leaving every room spotless from top to bottom.",
+    },
+    {
+      num: "05",
+      icon: Headphones,
+      title: "7 Days of Customer Support",
+      desc: "After your cleaning, we stay with you. Reach us by email, text, or phone for a full 7 days — whether you have a question, need a touch-up, or just want to rebook. We're here.",
     },
   ];
 
