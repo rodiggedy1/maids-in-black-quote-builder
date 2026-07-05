@@ -135,6 +135,28 @@ export default function WelcomePage() {
           </p>
         </div>
 
+        {/* Team Photo */}
+        <div className="relative overflow-hidden rounded-2xl" style={{ maxHeight: '420px' }}>
+          <img
+            src="/manus-storage/mib-team-photo_eac8c843.webp"
+            alt="Maids in Black team member"
+            className="w-full object-cover object-top"
+            style={{ maxHeight: '420px' }}
+          />
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background: 'linear-gradient(to bottom, transparent 50%, #0A0A0A 100%)'
+            }}
+          />
+          <div className="absolute bottom-0 left-0 right-0 px-6 pb-5">
+            <p className="font-serif text-white text-lg md:text-xl font-bold" style={{ textShadow: '0 2px 12px rgba(0,0,0,0.8)' }}>
+              Real people. Real results.
+            </p>
+            <p className="font-sans text-white/60 text-sm mt-1">Your Maids in Black team, ready to work.</p>
+          </div>
+        </div>
+
         {/* Why Choose Us */}
         <div>
           <span className="text-xs tracking-[0.3em] uppercase text-ember font-sans font-medium mb-4 block">
