@@ -136,12 +136,12 @@ export default function WelcomePage() {
         </div>
 
         {/* Team Photo */}
-        <div className="relative overflow-hidden rounded-2xl" style={{ maxHeight: '420px' }}>
+        <div className="relative overflow-hidden rounded-2xl" style={{ maxHeight: '560px' }}>
           <img
             src="/manus-storage/mib-team-photo_eac8c843.webp"
             alt="Maids in Black team member"
-            className="w-full object-cover object-top"
-            style={{ maxHeight: '420px' }}
+            className="w-full object-cover"
+            style={{ maxHeight: '560px', objectPosition: 'center 20%' }}
           />
           <div
             className="absolute inset-0 pointer-events-none"
